@@ -1,0 +1,24 @@
+---
+output:
+  md_document:
+    variant: gfm
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  echo = FALSE,
+  comment = "#>",
+  fig.path = "README-figs/",
+  cache.path = "README-cache/"
+)
+```
+
+# predRecruit
+Bundling code for doing parametric / non-parametric forecasts
+
+  <!-- badges: start -->
+  [![R-CMD-check](https://github.com/ecosystem-state/forecastRec/workflows/R-CMD-check/badge.svg)](https://github.com/ecosystem-state/forecastRec/actions)
+  <!-- badges: end -->
