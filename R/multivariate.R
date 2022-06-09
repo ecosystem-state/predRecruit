@@ -53,9 +53,10 @@ multivariate_forecast = function(response,
                             sep = " ~ "))
     }
     if(model_type=="gam") {
-      covar_names = paste0("s(",covar_names,",k=4,bs='ps')")
+      sub$species = as.factor(sub$species)
+      covar_names = paste0("s(",covar_names,", species,k=4,bs='fs')")
       f <- as.formula(paste("dev",
-                            paste(c("-1",paste0("species:",covar_names)), collapse = " + "),
+                            paste(c("-1",covar_names), collapse = " + "),
                             sep = " ~ "))
     }
     sub$est <- NA
