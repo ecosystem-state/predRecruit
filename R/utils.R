@@ -7,6 +7,8 @@
 #' 1:n_vars variables, and then results are combined and sorted to remove duplicates
 #' @importFrom dplyr bind_rows distinct
 #'
+#' @export
+#'
 #' @return an expanded data frame
 #'
 create_df_predictors = function(names, n_vars = 3) {
