@@ -63,16 +63,17 @@ univariate_forecast = function(response,
     sub$id <- i
     for(yr in (max(sub$time)-n_forecast+1):max(sub$time)) {
 
-      if(model_type=="lm") fit <- lm(f, data=sub[which(sub$time<yr - n_years_ahead + 1),])
-      if(model_type=="gam") fit <- gam(f, data=sub[which(sub$time<yr - n_years_ahead + 1),])
-
+      if(model_type=="lm") fit <- try(lm(f, data=sub[which(sub$time<yr - n_years_ahead + 1),]), silent=TRUE)
+      if(model_type=="gam") fit <- try(gam(f, data=sub[which(sub$time<yr - n_years_ahead + 1),]), silent=TRUE)
       #fit <- lm(z ~ -1 + cov_1:species, data=sub[which(sub$time<yr),])
       # note -- some of these will be negatively correlated. Sign isn't important and a
       # all coefficient signs can be flipped
-      pred = try(
-        predict(fit, newdata = sub[which(sub$time==yr),], se.fit=TRUE), silent = TRUE)
-      sub$est[which(sub$time==yr)] <- pred$fit
-      sub$se[which(sub$time==yr)] <- pred$se.fit
+      if(class(fit)[1] != "try-error") {
+        pred = try(
+          predict(fit, newdata = sub[which(sub$time==yr),], se.fit=TRUE), silent = TRUE)
+        sub$est[which(sub$time==yr)] <- pred$fit
+        sub$se[which(sub$time==yr)] <- pred$se.fit
+      }
     }
 
     if(i==1) {
