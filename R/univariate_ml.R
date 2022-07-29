@@ -68,9 +68,9 @@ univariate_forecast_ml = function(response,
       train_y = sub[which(sub$time < yr - n_years_ahead + 1),]
       train_y = train_y[,c("dev")]
 
-      if(model_type=="glmnet") try(fit <- glmnet(x=train_x, y = unlist(train_y),
+      if(model_type=="glmnet") try(fit <- glmnet(x=train_x, y = as.numeric(unlist(train_y)),
                                         lambda = tuning$lambda[i], alpha=tuning$alpha[i]), silent=TRUE)
-      if(model_type=="randomForest") try(fit <- randomForest(x = train_x, y = unlist(train_y),
+      if(model_type=="randomForest") try(fit <- randomForest(x = train_x, y = as.numeric(unlist(train_y)),
                                                     ntree = tuning$ntree[i], mtry = tuning$mtry[i]), silent=TRUE)
 
       #fit <- lm(z ~ -1 + cov_1:species, data=sub[which(sub$time<yr),])
