@@ -53,10 +53,13 @@ univariate_forecast_ml = function(response,
                                               ntree=seq(300,2000,by=100),
                                               mtry = seq(2,10))) {
 
+  if(any(class(predictors) == "data.frame")) {
+  } else {
+    stop("Error: predictors object must be a dataframe")
+  }
   # create a dataframe of predictors
   pred_names = names(predictors)
   time_col = which(names(predictors)=="time")
-
   # grid search for tuning parameters
   if(model_type=="glmnet") {
     tuning = expand.grid(alpha = control$alpha,
@@ -106,18 +109,6 @@ univariate_forecast_ml = function(response,
             sub$est[which(sub$time==yr)] <- pred
           }
         }
-      }
-      if(model_type=="randomForest") {
-        if(nrow(test_x) > 0) {
-          if(class(fit)[1] != "try-error") {
-            pred = try(
-              predict(fit, newdata = test_x), silent = TRUE)
-            sub$est[which(sub$time==yr)] <- pred
-          }
-        }
-        #sub$se[which(sub$time==yr)] <- pred$se.fit
-      }
-      if(class(fit)[1] != "try-error") {
         # save coefficients
         if(yr == min_yr) {
           coefs <- broom::tidy(fit)
@@ -127,6 +118,17 @@ univariate_forecast_ml = function(response,
           tmp_coefs$yr <- yr
           coefs <- rbind(coefs, tmp_coefs)
         }
+      }
+      if(model_type=="randomForest") {
+        if(nrow(test_x) > 0) {
+          if(class(fit)[1] != "try-error") {
+            pred = try(
+              predict(fit, newdata = test_x), silent = TRUE)
+            sub$est[which(sub$time==yr)] <- pred
+          }
+        }
+        coefs = NA
+        #sub$se[which(sub$time==yr)] <- pred$se.fit
       }
     }
 

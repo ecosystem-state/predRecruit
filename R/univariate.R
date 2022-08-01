@@ -45,10 +45,14 @@ univariate_forecast = function(response,
                                n_years_ahead = 1,
                                max_vars = 3) {
 
+  if(any(class(predictors) == "data.frame")) {
+  } else {
+    stop("Error: predictors object must be a dataframe")
+  }
   # create a dataframe of predictors
   pred_names = names(predictors)
   time_col = which(names(predictors)=="time")
-  if(class(predictors) != "data.frame") stop("Error: predictors object must be a dataframe")
+
   combos = create_df_predictors(names = pred_names[which(pred_names!="time")],
                                 n_vars = max_vars)
   if(class(combos)=="character") {
