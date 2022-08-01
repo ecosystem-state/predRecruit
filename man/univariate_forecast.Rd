@@ -30,8 +30,28 @@ be "lm", "gam",}
 \item{max_vars}{The maximum number of variables to include as predictors; defaults to 3}
 }
 \value{
-a list containing predictions and the variables used in making predictions
+a list containing predictions, with elements
+\itemize{
+\item \code{pred}: the predictions
+\item \code{vars}: the variable values used to fit the models
+\item \code{coefs}: coefficient estimates from each year:iteration
+}
 }
 \description{
 \code{univariate_forecast} vector of responses and dataframe of predictors and automates
+}
+\examples{
+response <- data.frame(time = 1:40, dev = rnorm(40))
+
+predictors <- matrix(rnorm(400), ncol = 10)
+#colnames(predictors) = paste0("X",1:ncol(predictors))
+predictors <- as.data.frame(predictors)
+predictors$time <- 1:40
+lm_example <- univariate_forecast(response,
+     predictors,
+     model_type = "lm",
+     n_forecast = 10,
+     n_years_ahead = 1,
+     max_vars = 3)
+
 }

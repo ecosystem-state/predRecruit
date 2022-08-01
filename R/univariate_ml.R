@@ -17,13 +17,31 @@
 #' mtry (defaults from 2 to 10, by steps of 1)
 #' @importFrom tidyr pivot_wider
 #' @importFrom dplyr left_join
+#' @importFrom broom tidy
 #' @importFrom randomForest randomForest
 #' @importFrom glmnet glmnet
 #' @importFrom stats complete.cases predict
 #'
 #' @export
 #'
-#' @return a list containing predictions and the variables used in making predictions
+#' @return a list containing predictions, with elements
+#'
+#' * `pred`: the predictions
+#' * `vars`: the variable values used to fit the models
+#' * `coefs`: tidy summaries from each year:iteration. Zeros not included for glmnet
+#'
+#'#' @examples
+#' response <- data.frame(time = 1:40, dev = rnorm(40))
+#'
+#' predictors <- matrix(rnorm(400), ncol = 10)
+#' #colnames(predictors) = paste0("X",1:ncol(predictors))
+#' predictors <- as.data.frame(predictors)
+#' predictors$time <- 1:40
+#' lm_example <- univariate_forecast_ml(response,
+#'      predictors,
+#'      model_type = "glmnet",
+#'      n_forecast = 10,
+#'      n_years_ahead = 1)
 #'
 univariate_forecast_ml = function(response,
                                predictors,
@@ -49,6 +67,8 @@ univariate_forecast_ml = function(response,
                          mtry = control$mtry)
   }
 
+  coef_list <- list() # empty list for storing coefficients
+
   for(i in 1:nrow(tuning)) {
     # keep time and
     sub = dplyr::left_join(as.data.frame(response[,c("time","dev")]), predictors, by="time")
@@ -57,8 +77,10 @@ univariate_forecast_ml = function(response,
 
     sub$est <- NA
     sub$se <- NA
+    min_yr <- max(sub$time)-n_forecast+1
+    max_yr <- max(sub$time)
 
-    for(yr in (max(sub$time)-n_forecast+1):max(sub$time)) {
+    for(yr in min_yr:max_yr) {
 
       # create X and Y. X are all covariates w/out time
       train_x = sub[which(sub$time < yr - n_years_ahead + 1),]
@@ -95,7 +117,20 @@ univariate_forecast_ml = function(response,
         }
         #sub$se[which(sub$time==yr)] <- pred$se.fit
       }
+      if(class(fit)[1] != "try-error") {
+        # save coefficients
+        if(yr == min_yr) {
+          coefs <- broom::tidy(fit)
+          coefs$yr <- yr
+        } else {
+          tmp_coefs <- broom::tidy(fit)
+          tmp_coefs$yr <- yr
+          coefs <- rbind(coefs, tmp_coefs)
+        }
+      }
     }
+
+    coef_list[[i]] <- coefs
 
     sub$id = i
     if(i==1) {

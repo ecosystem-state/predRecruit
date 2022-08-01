@@ -8,7 +8,7 @@ Description: This package contains simple functions for automating predictions o
 License: GPL (>= 3)
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
-Imports: mgcv, stats, glmnet, randomForest, dplyr, tidyr, glmmTMB
+Imports: broom, mgcv, stats, glmnet, randomForest, dplyr, tidyr, glmmTMB
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 LazyData: true
