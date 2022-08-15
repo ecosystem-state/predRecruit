@@ -11,6 +11,7 @@
 #' @param n_years_ahead How many years ahead to forecast (defaults to 1)
 #' 1:n_vars variables, and then results are combined and sorted to remove duplicates
 #' @param max_vars The maximum number of variables to include as predictors; defaults to 3
+#' @param formula Optional formula for passing to gam(), glmmTMB(), randomForest(), etc.
 #' @importFrom tidyr pivot_wider
 #' @importFrom dplyr left_join
 #' @importFrom stats lm as.formula predict.lm
@@ -26,7 +27,8 @@ multivariate_forecast = function(response,
                                model_type,
                                n_forecast = 10,
                                n_years_ahead = 1,
-                               max_vars = 3) {
+                               max_vars = 3,
+                               formula = NULL) {
 
   # create a dataframe of predictors
   pred_names = names(predictors)
@@ -67,6 +69,12 @@ multivariate_forecast = function(response,
                             paste(c("-1",covar_names), collapse = " + "),
                             sep = " ~ "))
     }
+
+    if(!is.null(formula)) {
+      f <- formula
+      if(class(f) != "formula") f <- as.formula(f)
+    }
+
     sub$est <- NA
     sub$se <- NA
     sub$id <- i
@@ -110,18 +118,3 @@ multivariate_forecast = function(response,
   return(out)
 }
 
-
-# if(model=="lm") fit_full <- lm(f, data=sub)
-# if(model=="gam") fit_full <- gam(f, data=sub)
-# spp_combo$aic[i] = AIC(fit_full)
-#
-# # calculate R2
-# r2 = dplyr::filter(sub, !is.na(est)) %>%
-#   dplyr::summarize(r2 = cor(est,z)^2)
-#
-# spp_combo$mean_r2[i] = mean(r2$r2)
-# spp_combo$rmse[i] = sqrt(mean((sub$est - sub$z)^2,na.rm=T))
-# if(spp_combo$rmse[i] < best_rmse) {
-#   best_rmse = spp_combo$rmse[i]
-#   best_dat = sub
-# }

@@ -133,18 +133,3 @@ univariate_forecast = function(response,
   return(out)
 }
 
-
-# if(model=="lm") fit_full <- lm(f, data=sub)
-# if(model=="gam") fit_full <- gam(f, data=sub)
-# spp_combo$aic[i] = AIC(fit_full)
-#
-# # calculate R2
-# r2 = dplyr::filter(sub, !is.na(est)) %>%
-#   dplyr::summarize(r2 = cor(est,z)^2)
-#
-# spp_combo$mean_r2[i] = mean(r2$r2)
-# spp_combo$rmse[i] = sqrt(mean((sub$est - sub$z)^2,na.rm=T))
-# if(spp_combo$rmse[i] < best_rmse) {
-#   best_rmse = spp_combo$rmse[i]
-#   best_dat = sub
-# }

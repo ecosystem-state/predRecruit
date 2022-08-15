@@ -10,7 +10,8 @@ multivariate_forecast(
   model_type,
   n_forecast = 10,
   n_years_ahead = 1,
-  max_vars = 3
+  max_vars = 3,
+  formula = NULL
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ be "lm", "gam",}
 1:n_vars variables, and then results are combined and sorted to remove duplicates}
 
 \item{max_vars}{The maximum number of variables to include as predictors; defaults to 3}
+
+\item{formula}{Optional formula for passing to gam(), glmmTMB(), randomForest(), etc.}
 }
 \value{
 a list containing predictions and the variables used in making predictions
