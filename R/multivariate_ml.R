@@ -68,12 +68,21 @@ multivariate_forecast_ml = function(response,
       # create X and Y. X are all covariates w/out time
       train_x = sub[which(sub$time < yr - n_years_ahead + 1),]
       train_x = train_x[,-which(names(train_x) %in% c("dev","time","est","se"))]
+
       test_x = sub[which(sub$time == yr),]
       test_x = test_x[,-which(names(test_x) %in% c("dev","time","est","se"))]
+
       train_y = sub[which(sub$time < yr - n_years_ahead + 1),]
       train_y = train_y[,c("dev")]
-
-      if(model_type=="glmnet") try(fit <- glmnet(x=train_x, y = unlist(train_y),
+      if(model_type == "glmnet") {
+        # glmnet can't take data frames or factors -- everything in matrix form
+        mm_train <- model.matrix(~.-1, train_x)
+        mm_test <- model.matrix(~.-1, test_x)
+        if(ncol(mm_test) != ncol(mm_train)) {
+          mm_train <- mm_train[,which(colnames(mm_train) %in% colnames(mm_test))]
+        }
+      }
+      if(model_type=="glmnet") try(fit <- glmnet(x=mm_train, y = unlist(train_y),
                                         lambda = tuning$lambda[i], alpha=tuning$alpha[i]), silent=TRUE)
       if(model_type=="randomForest") try(fit <- randomForest(x = train_x, y = unlist(train_y),
                                                     ntree = tuning$ntree[i], mtry = tuning$mtry[i]), silent=TRUE)
@@ -85,7 +94,7 @@ multivariate_forecast_ml = function(response,
         if(nrow(test_x) > 0) {
           if(class(fit)[1] != "try-error") {
             pred = try(
-              predict(fit, newx = as.matrix(test_x)), silent = TRUE)
+              predict(fit, newx = mm_test), silent = TRUE)
             sub$est[which(sub$time==yr)] <- pred
           }
         }

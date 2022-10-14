@@ -62,7 +62,7 @@ multivariate_forecast = function(response,
     }
     if(model_type=="gam") {
       sub$species = as.factor(sub$species)
-      covar_names = paste0("s(",covar_names,", species,k=4,bs='fs')")
+      covar_names = paste0("s(",covar_names,", species,k=4,bs='fs',m=2)")
       f <- as.formula(paste("dev",
                             paste(c("-1",covar_names), collapse = " + "),
                             sep = " ~ "))
