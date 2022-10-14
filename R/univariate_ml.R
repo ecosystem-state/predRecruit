@@ -21,6 +21,7 @@
 #' @importFrom randomForest randomForest
 #' @importFrom glmnet glmnet
 #' @importFrom stats complete.cases predict
+#' @importFrom utils txtProgressBar setTxtProgressBar
 #'
 #' @export
 #'
@@ -72,7 +73,12 @@ univariate_forecast_ml = function(response,
 
   coef_list <- list() # empty list for storing coefficients
 
+  # add progress bar
+  progress_bar <- txtProgressBar(min = 0, max = nrow(tuning), style = 3, char = "=")
+
   for(i in 1:nrow(tuning)) {
+    setTxtProgressBar(progress_bar, value = i)
+
     # keep time and
     sub = dplyr::left_join(as.data.frame(response[,c("time","dev")]), predictors, by="time")
     # filter out NAs in predictor / responses

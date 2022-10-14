@@ -20,6 +20,7 @@
 #' @importFrom randomForest randomForest
 #' @importFrom glmnet glmnet
 #' @importFrom stats complete.cases predict
+#' @importFrom utils txtProgressBar setTxtProgressBar
 #'
 #' @export
 #'
@@ -49,7 +50,11 @@ multivariate_forecast_ml = function(response,
                          mtry = control$mtry)
   }
 
+  # add progress bar
+  progress_bar <- txtProgressBar(min = 0, max = nrow(tuning), style = 3, char = "=")
+
   for(i in 1:nrow(tuning)) {
+    setTxtProgressBar(progress_bar, value = i)
     # keep time and
     sub = dplyr::left_join(as.data.frame(response[,c("time","dev","species")]), predictors, by="time")
     # filter out NAs in predictor / responses

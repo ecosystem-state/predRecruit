@@ -16,6 +16,7 @@
 #' @importFrom broom tidy
 #' @importFrom stats lm as.formula predict
 #' @importFrom mgcv gam
+#' @importFrom utils txtProgressBar setTxtProgressBar
 #'
 #' @export
 #'
@@ -62,7 +63,12 @@ univariate_forecast = function(response,
 
   coef_list <- list() # empty list for storing coefficients
 
+  # add progress bar
+  progress_bar <- txtProgressBar(min = 0, max = nrow(combos), style = 3, char = "=")
+
   for(i in 1:nrow(combos)) {
+    setTxtProgressBar(progress_bar, value = i)
+
     # keep time and
     tmp = predictors[,c(which(pred_names %in% c(combos[i,],"time")))]
     sub = dplyr::left_join(as.data.frame(response[,c("time","dev")]), tmp, by="time")

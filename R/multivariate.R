@@ -17,6 +17,7 @@
 #' @importFrom stats lm as.formula predict.lm
 #' @importFrom glmmTMB glmmTMB
 #' @importFrom mgcv gam predict.gam
+#' @importFrom utils txtProgressBar setTxtProgressBar
 #'
 #' @export
 #'
@@ -41,7 +42,11 @@ multivariate_forecast = function(response,
     combos = data.frame(cov1 = pred_names[which(pred_names!="time")])
   }
 
+  # add progress bar
+  progress_bar <- txtProgressBar(min = 0, max = nrow(combos), style = 3, char = "=")
+
   for(i in 1:nrow(combos)) {
+    setTxtProgressBar(progress_bar, value = i)
     # keep time and
     tmp = predictors[,c(1,which(pred_names %in% c(combos[i,])))]
     sub = dplyr::left_join(as.data.frame(response[,c("time","dev","species")]), tmp, by="time")
