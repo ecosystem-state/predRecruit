@@ -76,8 +76,8 @@ multivariate_forecast_ml = function(response,
       train_y = train_y[,c("dev")]
       if(model_type == "glmnet") {
         # glmnet can't take data frames or factors -- everything in matrix form
-        mm_train <- model.matrix(~.-1, train_x)
-        mm_test <- model.matrix(~.-1, test_x)
+        mm_train <- model.matrix(~.-1, train_x, na.action=na.pass)
+        mm_test <- model.matrix(~.-1, test_x, na.action=na.pass)
         if(ncol(mm_test) != ncol(mm_train)) {
           mm_train <- mm_train[,which(colnames(mm_train) %in% colnames(mm_test))]
         }
