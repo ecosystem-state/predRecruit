@@ -86,8 +86,8 @@ univariate_forecast_ml = function(response,
 
     sub$est <- NA
     sub$se <- NA
-    sub$train_r2 <- NA
-    sub$train_rmse <- NA
+    sub_stats <- data.frame(train_r2 = rep(NA, nrow(sub)),
+                            train_rmse = rep(NA, nrow(sub)))
     min_yr <- max(sub$time)-n_forecast+1
     max_yr <- max(sub$time)
 
@@ -120,8 +120,8 @@ univariate_forecast_ml = function(response,
             # add training r2 and training rmse
             pred = try(predict(fit, newx = as.matrix(train_x)), silent = TRUE)
             if(class(pred)[1] != "try-error") {
-              sub$train_r2[which(sub$time==yr)] <- cor(as.numeric(unlist(train_y)), pred, use = "pairwise.complete.obs") ^ 2
-              sub$train_rmse[which(sub$time==yr)] <- sqrt(mean((as.numeric(unlist(train_y)) - pred)^2, na.rm=T))
+              sub_stats$train_r2[which(sub$time==yr)] <- cor(as.numeric(unlist(train_y)), pred, use = "pairwise.complete.obs") ^ 2
+              sub_stats$train_rmse[which(sub$time==yr)] <- sqrt(mean((as.numeric(unlist(train_y)) - pred)^2, na.rm=T))
             }
           }
         }
@@ -145,8 +145,8 @@ univariate_forecast_ml = function(response,
             # add training r2 and training rmse
             pred = try(predict(fit, newdata = train_x), silent = TRUE)
             if(class(pred)[1] != "try-error") {
-              sub$train_r2[which(sub$time==yr)] <- cor(as.numeric(unlist(train_y)), pred, use = "pairwise.complete.obs") ^ 2
-              sub$train_rmse[which(sub$time==yr)] <- sqrt(mean((as.numeric(unlist(train_y)) - pred)^2, na.rm=T))
+              sub_stats$train_r2[which(sub$time==yr)] <- cor(as.numeric(unlist(train_y)), pred, use = "pairwise.complete.obs") ^ 2
+              sub_stats$train_rmse[which(sub$time==yr)] <- sqrt(mean((as.numeric(unlist(train_y)) - pred)^2, na.rm=T))
             }
 
           }
@@ -159,6 +159,7 @@ univariate_forecast_ml = function(response,
     coef_list[[i]] <- coefs
 
     sub$id = i
+    sub = cbind(sub, sub_stats) # can't have these in the df
     if(i==1) {
       out_df <- sub
     } else {
