@@ -1,6 +1,6 @@
 Package: predRecruit
 Title: Package For Predicting Recruitment
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person("Eric", "Ward", , "eric.ward@noa.gov", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-4359-0296"))
@@ -10,5 +10,5 @@ Encoding: UTF-8
 Depends: R (>= 3.5.0)
 Imports: broom, mgcv, stats, glmnet, randomForest, dplyr, tidyr, glmmTMB
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 LazyData: true

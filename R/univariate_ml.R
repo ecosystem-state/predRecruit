@@ -20,7 +20,7 @@
 #' @importFrom broom tidy
 #' @importFrom randomForest randomForest
 #' @importFrom glmnet glmnet
-#' @importFrom stats complete.cases predict
+#' @importFrom stats complete.cases predict cor model.matrix na.pass
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #'
 #' @export

@@ -14,7 +14,7 @@
 #' @param formula Optional formula for passing to gam(), glmmTMB(), randomForest(), etc.
 #' @importFrom tidyr pivot_wider
 #' @importFrom dplyr left_join
-#' @importFrom stats lm as.formula predict.lm
+#' @importFrom stats lm as.formula predict.lm cor model.matrix na.pass
 #' @importFrom glmmTMB glmmTMB
 #' @importFrom mgcv gam predict.gam
 #' @importFrom utils txtProgressBar setTxtProgressBar

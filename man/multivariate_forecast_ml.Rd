@@ -10,8 +10,8 @@ multivariate_forecast_ml(
   model_type,
   n_forecast = 10,
   n_years_ahead = 1,
-  control = list(alpha = seq(0.1, 0.9, by = 0.05), lambda = seq(0, 2, by = 0.05), ntree
-    = seq(300, 2000, by = 100), mtry = seq(2, 10))
+  control = list(alpha = seq(0.1, 0.9, by = 0.05), lambda = seq(0, 2, by = 0.05), ntree =
+    seq(300, 2000, by = 100), mtry = seq(2, 10))
 )
 }
 \arguments{

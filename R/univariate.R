@@ -14,7 +14,7 @@
 #' @importFrom tidyr pivot_wider
 #' @importFrom dplyr left_join
 #' @importFrom broom tidy
-#' @importFrom stats lm as.formula predict
+#' @importFrom stats lm as.formula predict cor model.matrix na.pass
 #' @importFrom mgcv gam
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #'
