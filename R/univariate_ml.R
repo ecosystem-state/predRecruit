@@ -86,10 +86,13 @@ univariate_forecast_ml = function(response,
 
     sub$est <- NA
     sub$se <- NA
+    sub$train_r2 <- NA
+    sub$train_rmse <- NA
     min_yr <- max(sub$time)-n_forecast+1
     max_yr <- max(sub$time)
 
     for(yr in min_yr:max_yr) {
+      sub_dat <- sub[which(sub$time< yr - n_years_ahead + 1),]
 
       # create X and Y. X are all covariates w/out time
       train_x = sub[which(sub$time < yr - n_years_ahead + 1),]
@@ -113,6 +116,13 @@ univariate_forecast_ml = function(response,
             pred = try(
               predict(fit, newx = as.matrix(test_x)), silent = TRUE)
             sub$est[which(sub$time==yr)] <- pred
+
+            # add training r2 and training rmse
+            pred = try(predict(fit, newx = as.matrix(train_x)), silent = TRUE)
+            if(class(pred)[1] != "try-error") {
+              sub$train_r2[which(sub$time==yr)] <- cor(as.numeric(unlist(train_y)), pred, use = "pairwise.complete.obs") ^ 2
+              sub$train_rmse[which(sub$time==yr)] <- sqrt(mean((as.numeric(unlist(train_y)) - pred)^2, na.rm=T))
+            }
           }
         }
         # save coefficients
@@ -131,6 +141,14 @@ univariate_forecast_ml = function(response,
             pred = try(
               predict(fit, newdata = test_x), silent = TRUE)
             sub$est[which(sub$time==yr)] <- pred
+
+            # add training r2 and training rmse
+            pred = try(predict(fit, newdata = train_x), silent = TRUE)
+            if(class(pred)[1] != "try-error") {
+              sub$train_r2[which(sub$time==yr)] <- cor(as.numeric(unlist(train_y)), pred, use = "pairwise.complete.obs") ^ 2
+              sub$train_rmse[which(sub$time==yr)] <- sqrt(mean((as.numeric(unlist(train_y)) - pred)^2, na.rm=T))
+            }
+
           }
         }
         coefs = NA

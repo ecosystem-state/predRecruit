@@ -82,12 +82,15 @@ multivariate_forecast = function(response,
 
     sub$est <- NA
     sub$se <- NA
+    sub$train_r2 <- NA
+    sub$train_rmse <- NA
     sub$id <- i
     for(yr in (max(sub$time)-n_forecast+1):max(sub$time)) {
+      sub_dat <- sub[which(sub$time< yr - n_years_ahead + 1),]
 
-      if(model_type=="lm") try(fit <- lm(f, data=sub[which(sub$time<yr - n_years_ahead + 1),]), silent=TRUE)
-      if(model_type=="gam") try(fit <- gam(f, data=sub[which(sub$time<yr - n_years_ahead + 1),]), silent=TRUE)
-      if(model_type=="glmm") try(fit <- glmmTMB(f, data=sub[which(sub$time<yr - n_years_ahead + 1),]), silent=TRUE)
+      if(model_type=="lm") try(fit <- lm(f, data=sub_dat), silent=TRUE)
+      if(model_type=="gam") try(fit <- gam(f, data=sub_dat), silent=TRUE)
+      if(model_type=="glmm") try(fit <- glmmTMB(f, data=sub_dat), silent=TRUE)
 
       #fit <- lm(z ~ -1 + cov_1:species, data=sub[which(sub$time<yr),])
       # note -- some of these will be negatively correlated. Sign isn't important and a
@@ -101,6 +104,12 @@ multivariate_forecast = function(response,
       if(class(pred)[1] != "try-error" & converge==TRUE) {
         sub$est[which(sub$time==yr)] <- pred$fit
         sub$se[which(sub$time==yr)] <- pred$se.fit
+      }
+      # add training r2 and training rmse
+      pred = try(predict(fit, sub_dat), silent = TRUE)
+      if(class(pred)[1] != "try-error" & converge==TRUE) {
+        sub$train_r2[which(sub$time==yr)] <- cor(sub_dat$dev, pred, use = "pairwise.complete.obs") ^ 2
+        sub$train_rmse[which(sub$time==yr)] <- sqrt(mean((sub_dat$dev - pred)^2, na.rm=T))
       }
     }
 

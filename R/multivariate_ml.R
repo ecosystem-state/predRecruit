@@ -62,6 +62,8 @@ multivariate_forecast_ml = function(response,
 
     sub$est <- NA
     sub$se <- NA
+    sub$train_r2 <- NA
+    sub$train_rmse <- NA
 
     for(yr in (max(sub$time)-n_forecast+1):max(sub$time)) {
 
@@ -97,6 +99,13 @@ multivariate_forecast_ml = function(response,
               predict(fit, newx = mm_test), silent = TRUE)
             sub$est[which(sub$time==yr)] <- pred
           }
+
+          # add training r2 and training rmse
+          pred = try(predict(fit, newx = as.matrix(train_x)), silent = TRUE)
+          if(class(pred)[1] != "try-error") {
+            sub$train_r2[which(sub$time==yr)] <- cor(as.numeric(unlist(train_y)), pred, use = "pairwise.complete.obs") ^ 2
+            sub$train_rmse[which(sub$time==yr)] <- sqrt(mean((as.numeric(unlist(train_y)) - pred)^2, na.rm=T))
+          }
         }
       }
       if(model_type=="randomForest") {
@@ -105,6 +114,13 @@ multivariate_forecast_ml = function(response,
             pred = try(
               predict(fit, newdata = test_x), silent = TRUE)
             sub$est[which(sub$time==yr)] <- pred
+
+            # add training r2 and training rmse
+            pred = try(predict(fit, newdata = train_x), silent = TRUE)
+            if(class(pred)[1] != "try-error") {
+              sub$train_r2[which(sub$time==yr)] <- cor(as.numeric(unlist(train_y)), pred, use = "pairwise.complete.obs") ^ 2
+              sub$train_rmse[which(sub$time==yr)] <- sqrt(mean((as.numeric(unlist(train_y)) - pred)^2, na.rm=T))
+            }
           }
         }
         #sub$se[which(sub$time==yr)] <- pred$se.fit

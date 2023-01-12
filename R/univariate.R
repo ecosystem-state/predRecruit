@@ -90,13 +90,16 @@ univariate_forecast = function(response,
     }
     sub$est <- NA
     sub$se <- NA
+    sub$train_r2 <- NA
+    sub$train_rmse <- NA
     sub$id <- i
     min_yr <- max(sub$time)-n_forecast+1
     max_yr <- max(sub$time)
 
     for(yr in min_yr:max_yr) {
-      if(model_type=="lm") fit <- try(lm(f, data=sub[which(sub$time<yr - n_years_ahead + 1),]), silent=TRUE)
-      if(model_type=="gam") fit <- try(gam(f, data=sub[which(sub$time<yr - n_years_ahead + 1),]), silent=TRUE)
+      sub_dat <- sub[which(sub$time< yr - n_years_ahead + 1),]
+      if(model_type=="lm") fit <- try(lm(f, data = sub_dat), silent=TRUE)
+      if(model_type=="gam") fit <- try(gam(f, data = sub_dat), silent=TRUE)
       #fit <- lm(z ~ -1 + cov_1:species, data=sub[which(sub$time<yr),])
       # note -- some of these will be negatively correlated. Sign isn't important and a
       # all coefficient signs can be flipped
@@ -106,6 +109,12 @@ univariate_forecast = function(response,
         sub$est[which(sub$time==yr)] <- pred$fit
         sub$se[which(sub$time==yr)] <- pred$se.fit
 
+        # add training r2 and training rmse
+        pred = try(predict(fit, sub_dat), silent = TRUE)
+        if(class(pred)[1] != "try-error") {
+          sub$train_r2[which(sub$time==yr)] <- cor(sub_dat$dev, pred, use = "pairwise.complete.obs") ^ 2
+          sub$train_rmse[which(sub$time==yr)] <- sqrt(mean((sub_dat$dev - pred)^2, na.rm=T))
+        }
         # save coefficients
         if(yr == min_yr) {
           coefs <- broom::tidy(fit)
