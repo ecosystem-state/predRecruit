@@ -108,8 +108,8 @@ multivariate_forecast = function(response,
       # add training r2 and training rmse
       pred = try(predict(fit, sub_dat), silent = TRUE)
       if(class(pred)[1] != "try-error" & converge==TRUE) {
-        sub$train_r2[which(sub$time==yr)] <- cor(sub_dat$dev, pred, use = "pairwise.complete.obs") ^ 2
-        sub$train_rmse[which(sub$time==yr)] <- sqrt(mean((sub_dat$dev - pred)^2, na.rm=T))
+        sub$train_r2[which(sub$time==yr)] <- cor(c(sub_dat$dev), pred, use = "pairwise.complete.obs") ^ 2
+        sub$train_rmse[which(sub$time==yr)] <- sqrt(mean((c(sub_dat$dev) - pred)^2, na.rm=T))
       }
     }
 
