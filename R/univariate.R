@@ -14,6 +14,7 @@
 #' @importFrom tidyr pivot_wider
 #' @importFrom dplyr left_join
 #' @importFrom broom tidy
+#' @importFrom ggeffects ggpredict
 #' @importFrom stats lm as.formula predict cor model.matrix na.pass
 #' @importFrom mgcv gam
 #' @importFrom utils txtProgressBar setTxtProgressBar
@@ -62,6 +63,7 @@ univariate_forecast = function(response,
   }
 
   coef_list <- list() # empty list for storing coefficients
+  marginal_pred <- list() # empty list for storing marginal predictions
 
   # add progress bar
   progress_bar <- txtProgressBar(min = 0, max = nrow(combos), style = 3, char = "=")
@@ -83,9 +85,9 @@ univariate_forecast = function(response,
                             sep = " ~ "))
     }
     if(model_type=="gam") {
-      covar_names = paste0("s(",covar_names,",k=4,bs='ps')")
+      covar_names_str = paste0("s(",covar_names,",k=4,bs='ps')")
       f <- as.formula(paste("dev",
-                            paste(c("-1",covar_names), collapse = " + "),
+                            paste(c("-1",covar_names_str), collapse = " + "),
                             sep = " ~ "))
     }
     sub$est <- NA
@@ -124,9 +126,25 @@ univariate_forecast = function(response,
           tmp_coefs$yr <- yr
           coefs <- rbind(coefs, tmp_coefs)
         }
+
+        # save marginal predictions
+        for(ii in 1:length(covar_names)) {
+          marg <- ggpredict(fit,covar_names[ii])
+          marg$year <- yr
+          if(ii == 1) {
+            marg_pred <- marg
+          } else {
+            marg_pred <- rbind(marg_pred, marg)
+          }
+        }
+        if(yr == min_yr) {
+          marg_all <- marg_pred
+        } else {
+          marg_all <- rbind(marg_all, marg_pred)
+        }
       }
     }
-
+    marginal_pred[[i]] <- marg_all
     coef_list[[i]] <- coefs
 
     if(i==1) {
@@ -144,7 +162,10 @@ univariate_forecast = function(response,
   }
 
   combos$id <- seq(1,nrow(combos))
-  out <- list("pred" = out_df, "vars"=combos, "coefs" = coef_list)
+  out <- list("pred" = out_df,
+              "vars"=combos,
+              "coefs" = coef_list,
+              "marginal" = marginal_pred)
   return(out)
 }
 
