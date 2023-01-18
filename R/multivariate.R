@@ -130,6 +130,7 @@ multivariate_forecast = function(response,
       for(ii in 1:length(covar_names)) {
         marg <- ggpredict(fit,covar_names[ii])
         marg$year <- yr
+        marg$cov <- covar_names[ii]
         if(ii == 1) {
           marg_pred <- marg
         } else {
