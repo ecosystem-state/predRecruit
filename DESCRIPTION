@@ -1,14 +1,15 @@
 Package: predRecruit
 Title: Package For Predicting Recruitment
-Version: 0.2.0
-Authors@R: 
-    person("Eric", "Ward", , "eric.ward@noa.gov", role = c("aut", "cre"),
+Version: 0.3.0
+Authors@R:
+    person("Eric", "Ward", , "eric.ward@noaa.gov", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-4359-0296"))
 Description: This package contains simple functions for automating predictions of recruitment deviations from external data.
 License: GPL (>= 3)
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
-Imports: broom, mgcv, stats, glmnet, randomForest, dplyr, tidyr, glmmTMB, ggeffects
+Imports: broom, mgcv, stats, glmnet, randomForest, dplyr, tidyr, glmmTMB, ggeffects, knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 LazyData: true
+VignetteBuilder: knitr
