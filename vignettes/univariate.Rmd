@@ -24,7 +24,7 @@ library(ggplot2)
 
 We can fit linear regression and generalized additive models using the `univariate()` function. Here, we'll simulate some dummy data. Our response has 40 time steps, and the matrix of predictors includes 4 potential covariates. 
 
-```{r}
+```{r results = 'hide', message = FALSE, warning = FALSE}
 response <- data.frame(time = 1:40, dev = rnorm(40))
 
 predictors <- matrix(rnorm(4 * 40), ncol = 4)
@@ -78,7 +78,7 @@ ggplot(marg, aes(x, predicted)) +
 
 Using our above dummy dataset, we can also try to use random forest or lasso / ridge regression methods to generate forecasts. These are done with the `univariate_forecast_ml` function.   
 
-```{r}
+```{r results = 'hide', message = FALSE, warning = FALSE}
 lm_example <- univariate_forecast_ml(response,
     predictors,
     model_type = "glmnet", # can be "glmnet" or "randomForest"
