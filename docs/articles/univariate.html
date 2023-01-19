@@ -71,7 +71,7 @@
       <h1 data-toc-skip>Univariate examples</h1>
                         <h4 data-toc-skip class="author">Eric Ward</h4>
             
-            <h4 data-toc-skip class="date">2023-01-18</h4>
+            <h4 data-toc-skip class="date">2023-01-19</h4>
       
       
       <div class="hidden name"><code>univariate.Rmd</code></div>
@@ -127,16 +127,16 @@ at</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 30 × 6</span></span></span>
 <span><span class="co">##    term  estimate std.error statistic p.value    yr</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> cov1   -<span style="color: #BB0000;">0.129</span>      0.173    -<span style="color: #BB0000;">0.748</span>   0.461    31</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> cov2    0.125      0.161     0.773   0.446    31</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> cov3   -<span style="color: #BB0000;">0.113</span>      0.169    -<span style="color: #BB0000;">0.672</span>   0.507    31</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> cov1   -<span style="color: #BB0000;">0.099</span><span style="color: #BB0000; text-decoration: underline;">5</span>     0.173    -<span style="color: #BB0000;">0.575</span>   0.570    32</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> cov2    0.130      0.163     0.797   0.432    32</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> cov3   -<span style="color: #BB0000;">0.101</span>      0.170    -<span style="color: #BB0000;">0.594</span>   0.557    32</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> cov1   -<span style="color: #BB0000;">0.102</span>      0.162    -<span style="color: #BB0000;">0.629</span>   0.534    33</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> cov2    0.131      0.159     0.822   0.418    33</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> cov3   -<span style="color: #BB0000;">0.101</span>      0.167    -<span style="color: #BB0000;">0.606</span>   0.549    33</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> cov1   -<span style="color: #BB0000;">0.118</span>      0.161    -<span style="color: #BB0000;">0.732</span>   0.470    34</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> cov1   0.059<span style="text-decoration: underline;">0</span>      0.205    0.287    0.776    31</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> cov2  -<span style="color: #BB0000;">0.244</span>       0.237   -<span style="color: #BB0000;">1.03</span>     0.313    31</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> cov3   0.002<span style="text-decoration: underline;">99</span>     0.187    0.016<span style="text-decoration: underline;">0</span>   0.987    31</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> cov1   0.044<span style="text-decoration: underline;">1</span>      0.209    0.211    0.834    32</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> cov2  -<span style="color: #BB0000;">0.160</span>       0.234   -<span style="color: #BB0000;">0.684</span>    0.500    32</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> cov3  -<span style="color: #BB0000;">0.035</span><span style="color: #BB0000; text-decoration: underline;">2</span>      0.188   -<span style="color: #BB0000;">0.187</span>    0.853    32</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> cov1   0.039<span style="text-decoration: underline;">7</span>      0.202    0.196    0.846    33</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> cov2  -<span style="color: #BB0000;">0.149</span>       0.214   -<span style="color: #BB0000;">0.697</span>    0.491    33</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> cov3  -<span style="color: #BB0000;">0.027</span><span style="color: #BB0000; text-decoration: underline;">6</span>      0.175   -<span style="color: #BB0000;">0.157</span>    0.876    33</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> cov1   0.030<span style="text-decoration: underline;">2</span>      0.193    0.156    0.877    34</span></span>
 <span><span class="co">## <span style="color: #949494;"># … with 20 more rows</span></span></span></code></pre>
 <p>and see that there are 10 sets of the 3 coefficients, along with
 standard errors and p-values for each (<code>yr</code> ranging from 31
