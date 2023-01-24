@@ -57,6 +57,7 @@ multivariate_forecast = function(response,
     # remove spaces if they exist to help with formula parsing
     names(sub)[4:ncol(sub)] = paste0("cov", seq(1,length(4:ncol(sub))))
     covar_names = names(sub)[4:ncol(sub)]
+    name_df = data.frame(orig_name = names(tmp)[which(names(tmp) != "time")], new_name = covar_names)
 
     # Add formulas -- no intercept because rec devs are already standardized, as are predictors
     if(model_type=="lm") {
@@ -120,9 +121,11 @@ multivariate_forecast = function(response,
       if(yr == min_yr) {
         coefs <- broom::tidy(fit)
         coefs$yr <- yr
+        coefs$orig_cov = name_df$orig_name
       } else {
         tmp_coefs <- broom::tidy(fit)
         tmp_coefs$yr <- yr
+        tmp_coefs$orig_cov = name_df$orig_name
         coefs <- rbind(coefs, tmp_coefs)
       }
 
@@ -131,6 +134,7 @@ multivariate_forecast = function(response,
         marg <- ggpredict(fit,covar_names[ii])
         marg$year <- yr
         marg$cov <- covar_names[ii]
+        marg$orig_cov <- name_df$orig_name[ii]
         if(ii == 1) {
           marg_pred <- marg
         } else {

@@ -75,8 +75,10 @@ univariate_forecast = function(response,
     tmp = predictors[,c(which(pred_names %in% c(combos[i,],"time")))]
     sub = dplyr::left_join(as.data.frame(response[,c("time","dev")]), tmp, by="time")
     # remove spaces if they exist to help with formula parsing
+
     names(sub)[3:ncol(sub)] = paste0("cov", seq(1,length(3:ncol(sub))))
     covar_names = names(sub)[3:ncol(sub)]
+    name_df = data.frame(orig_name = names(tmp)[which(names(tmp) != "time")], new_name = covar_names)
 
     # Add formulas -- no intercept because rec devs are already standardized, as are predictors
     if(model_type=="lm") {
@@ -121,9 +123,11 @@ univariate_forecast = function(response,
         if(yr == min_yr) {
           coefs <- broom::tidy(fit)
           coefs$yr <- yr
+          coefs$orig_cov = name_df$orig_name
         } else {
           tmp_coefs <- broom::tidy(fit)
           tmp_coefs$yr <- yr
+          tmp_coefs$orig_cov = name_df$orig_name
           coefs <- rbind(coefs, tmp_coefs)
         }
 
@@ -131,7 +135,8 @@ univariate_forecast = function(response,
         for(ii in 1:length(covar_names)) {
           marg <- ggpredict(fit,covar_names[ii])
           marg$year <- yr
-          marg$cov <- covar_names[ii]
+          marg$cov <- name_df$orig_name[ii]
+          marg$orig_cov <- name_df$orig_name[ii]
           if(ii == 1) {
             marg_pred <- marg
           } else {
